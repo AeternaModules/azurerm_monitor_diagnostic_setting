@@ -36,58 +36,26 @@ EOT
     log_analytics_workspace_id     = optional(string)
     partner_solution_id            = optional(string)
     storage_account_id             = optional(string)
-    enabled_log = optional(object({
+    enabled_log = optional(list(object({
       category       = optional(string)
       category_group = optional(string)
       retention_policy = optional(object({
         days    = optional(number)
         enabled = bool
       }))
-    }))
-    enabled_metric = optional(object({
+    })))
+    enabled_metric = optional(list(object({
       category = string
-    }))
-    metric = optional(object({
+    })))
+    metric = optional(list(object({
       category = string
       enabled  = optional(bool) # Default: true
       retention_policy = optional(object({
         days    = optional(number)
         enabled = bool
       }))
-    }))
+    })))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.monitor_diagnostic_settings : (
-        v.log_analytics_destination_type == null || (contains(["Dedicated", "AzureDiagnostics"], v.log_analytics_destination_type))
-      )
-    ])
-    error_message = "must be one of: Dedicated, AzureDiagnostics"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.monitor_diagnostic_settings : (
-        v.enabled_log == null || (v.enabled_log.category == null || (length(v.enabled_log.category) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.monitor_diagnostic_settings : (
-        v.enabled_log == null || (v.enabled_log.category_group == null || (length(v.enabled_log.category_group) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.monitor_diagnostic_settings : (
-        v.enabled_metric == null || (length(v.enabled_metric.category) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_monitor_diagnostic_setting's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -116,6 +84,18 @@ EOT
   #   source:    [from azure.ValidateResourceID] !ok
   # path: partner_solution_id
   #   source:    [from azure.ValidateResourceID] err != nil
+  # path: log_analytics_destination_type
+  #   condition: contains(["Dedicated", "AzureDiagnostics"], value)
+  #   message:   must be one of: Dedicated, AzureDiagnostics
+  # path: enabled_log.category
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: enabled_log.category_group
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: enabled_metric.category
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: days
   #   condition: value >= 0
   #   message:   must be at least 0

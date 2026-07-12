@@ -11,7 +11,7 @@ resource "azurerm_monitor_diagnostic_setting" "monitor_diagnostic_settings" {
   storage_account_id             = each.value.storage_account_id
 
   dynamic "enabled_log" {
-    for_each = each.value.enabled_log != null ? [each.value.enabled_log] : []
+    for_each = each.value.enabled_log != null ? each.value.enabled_log : []
     content {
       category       = enabled_log.value.category
       category_group = enabled_log.value.category_group
@@ -26,14 +26,14 @@ resource "azurerm_monitor_diagnostic_setting" "monitor_diagnostic_settings" {
   }
 
   dynamic "enabled_metric" {
-    for_each = each.value.enabled_metric != null ? [each.value.enabled_metric] : []
+    for_each = each.value.enabled_metric != null ? each.value.enabled_metric : []
     content {
       category = enabled_metric.value.category
     }
   }
 
   dynamic "metric" {
-    for_each = each.value.metric != null ? [each.value.metric] : []
+    for_each = each.value.metric != null ? each.value.metric : []
     content {
       category = metric.value.category
       enabled  = metric.value.enabled
