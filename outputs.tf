@@ -1,3 +1,7 @@
+output "monitor_diagnostic_settings_id" {
+  description = "Map of id values across all monitor_diagnostic_settings, keyed the same as var.monitor_diagnostic_settings"
+  value       = { for k, v in azurerm_monitor_diagnostic_setting.monitor_diagnostic_settings : k => v.id }
+}
 output "monitor_diagnostic_settings_enabled_log" {
   description = "Map of enabled_log values across all monitor_diagnostic_settings, keyed the same as var.monitor_diagnostic_settings"
   value       = { for k, v in azurerm_monitor_diagnostic_setting.monitor_diagnostic_settings : k => v.enabled_log }
