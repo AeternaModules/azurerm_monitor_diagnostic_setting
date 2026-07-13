@@ -49,7 +49,7 @@ EOT
     })))
     metric = optional(list(object({
       category = string
-      enabled  = optional(bool) # Default: true
+      enabled  = optional(bool)
       retention_policy = optional(object({
         days    = optional(number)
         enabled = bool
