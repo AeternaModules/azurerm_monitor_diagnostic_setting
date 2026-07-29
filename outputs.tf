@@ -26,10 +26,6 @@ output "monitor_diagnostic_settings_log_analytics_workspace_id" {
   description = "Map of log_analytics_workspace_id values across all monitor_diagnostic_settings, keyed the same as var.monitor_diagnostic_settings"
   value       = { for k, v in azurerm_monitor_diagnostic_setting.monitor_diagnostic_settings : k => v.log_analytics_workspace_id if v.log_analytics_workspace_id != null && length(v.log_analytics_workspace_id) > 0 }
 }
-output "monitor_diagnostic_settings_metric" {
-  description = "Map of metric values across all monitor_diagnostic_settings, keyed the same as var.monitor_diagnostic_settings"
-  value       = { for k, v in azurerm_monitor_diagnostic_setting.monitor_diagnostic_settings : k => v.metric if v.metric != null && length(v.metric) > 0 }
-}
 output "monitor_diagnostic_settings_name" {
   description = "Map of name values across all monitor_diagnostic_settings, keyed the same as var.monitor_diagnostic_settings"
   value       = { for k, v in azurerm_monitor_diagnostic_setting.monitor_diagnostic_settings : k => v.name if v.name != null && length(v.name) > 0 }

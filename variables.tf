@@ -14,17 +14,8 @@ Optional:
     - enabled_log (block):
         - category (optional)
         - category_group (optional)
-        - retention_policy (optional, block):
-            - days (optional)
-            - enabled (required)
     - enabled_metric (block):
         - category (required)
-    - metric (block):
-        - category (required)
-        - enabled (optional)
-        - retention_policy (optional, block):
-            - days (optional)
-            - enabled (required)
 EOT
 
   type = map(object({
@@ -39,21 +30,9 @@ EOT
     enabled_log = optional(list(object({
       category       = optional(string)
       category_group = optional(string)
-      retention_policy = optional(object({
-        days    = optional(number)
-        enabled = bool
-      }))
     })))
     enabled_metric = optional(list(object({
       category = string
-    })))
-    metric = optional(list(object({
-      category = string
-      enabled  = optional(bool)
-      retention_policy = optional(object({
-        days    = optional(number)
-        enabled = bool
-      }))
     })))
   }))
   validation {
